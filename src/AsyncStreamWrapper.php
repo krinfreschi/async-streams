@@ -41,6 +41,9 @@ class AsyncStreamWrapper
     private $pendingWrites = [];
     private $pendingWritesSize = 0;
 
+    //TODO: find better way of referencing current resource
+    private static $streams = [];
+
     /**
      * @var LoopInterface
      */
@@ -117,11 +120,15 @@ class AsyncStreamWrapper
                 . 'writable, or both.');
         }
 
-        return fopen(self::WRAPPER_NAME . '://stream', $mode, null, stream_context_create([
+        $wrap = fopen(self::WRAPPER_NAME . '://stream', $mode, null, stream_context_create([
             self::WRAPPER_NAME => [
                 'handle' => $handle,
             ],
         ]));
+
+        static::$streams[(int)$handle] = $wrap;
+
+        return $wrap;
     }
 
 
@@ -149,6 +156,7 @@ class AsyncStreamWrapper
         $this->getLoop()->futureTick(function () {
             $this->getLoop()->removeStream($this->stream);
             fclose($this->stream);
+            unset(static::$streams[(int)$this->stream]);
         });
     }
 
@@ -324,11 +332,15 @@ class AsyncStreamWrapper
         return null;
     }
 
+    protected function getResource(){
+        return static::$streams[(int)$this->stream];
+    }
+
     protected function asyncHandleRead()
     {
         $options = $this->getOptions();
         if(isset($options["read_callback"]) && $options["read_callback"]){
-            call_user_func($options["read_callback"], $this->stream);
+            call_user_func($options["read_callback"], $this->getResource());
         }
     }
 
@@ -344,7 +356,7 @@ class AsyncStreamWrapper
             $this->pendingWritesSize -= $written;
             $options = $this->getOptions();
             if(isset($options["write_callback"]) && $options["write_callback"]){
-                call_user_func($options["write_callback"], $this->stream, $written, $this->pendingWritesSize);
+                call_user_func($options["write_callback"], $this->getResource(), $written, $this->pendingWritesSize);
             }
         }
     }
