@@ -73,16 +73,27 @@ class AsyncStreamWrapper
         return static::$loop;
     }
 
+    /**
+     * @param LoopInterface $loop
+     */
     public static function setLoop(LoopInterface $loop)
     {
         static::$loop = $loop;
     }
 
+    /**
+     * Run the event loop
+     */
     public static function run()
     {
         static::$loop->run();
     }
 
+    /**
+     * @param $handle
+     * @return resource
+     * @throws \InvalidArgumentException
+     */
     public static function wrap($handle)
     {
         if (!in_array('async', stream_get_wrappers())) {
@@ -114,6 +125,10 @@ class AsyncStreamWrapper
     }
 
 
+    /**
+     * @param $cast_as
+     * @return bool|stream|resource
+     */
     public function stream_cast($cast_as)
     {
         switch ($cast_as) {
@@ -125,6 +140,9 @@ class AsyncStreamWrapper
         return false;
     }
 
+    /**
+     *
+     */
     public function stream_close()
     {
         $this->isClosing = true;
@@ -134,11 +152,21 @@ class AsyncStreamWrapper
         });
     }
 
+    /**
+     * @return bool
+     */
     public function stream_eof()
     {
         return $this->isClosing || !is_resource($this->stream) || feof($this->stream);
     }
 
+    /**
+     * @param $path
+     * @param $mode
+     * @param $options
+     * @param $opened_path
+     * @return bool
+     */
     public function stream_open($path, $mode, $options, &$opened_path)
     {
         $options = $this->getOptions();
@@ -173,6 +201,10 @@ class AsyncStreamWrapper
         return true;
     }
 
+    /**
+     * @param $count
+     * @return string
+     */
     public function stream_read($count)
     {
         return $this->readable
@@ -180,6 +212,11 @@ class AsyncStreamWrapper
             : "";
     }
 
+    /**
+     * @param $offset
+     * @param int $whence
+     * @return bool
+     */
     public function stream_seek($offset, $whence = SEEK_SET)
     {
         return $this->seekable
@@ -187,6 +224,9 @@ class AsyncStreamWrapper
             : false;
     }
 
+    /**
+     * @return array
+     */
     public function stream_stat()
     {
         static $modeMap = [
@@ -212,16 +252,27 @@ class AsyncStreamWrapper
         ];
     }
 
+    /**
+     * @return int
+     */
     public function stream_tell()
     {
         return ftell($this->stream);
     }
 
+    /**
+     * @param $new_size
+     * @return bool
+     */
     public function stream_truncate($new_size)
     {
         return ftruncate($this->stream, $new_size);
     }
 
+    /**
+     * @param $data
+     * @return bool|int
+     */
     public function stream_write($data)
     {
         if ($this->writable) {
@@ -231,15 +282,26 @@ class AsyncStreamWrapper
         return false;
     }
 
+    /**
+     * @param $option
+     * @param $value
+     * @return bool
+     */
     public function setOptions($option, $value){
         return stream_context_set_option($this->context, self::WRAPPER_NAME, $option, $value);
     }
 
+    /**
+     * @return bool
+     */
     public function getOptions(){
         $options = stream_context_get_options($this->context);
         return isset($options[self::WRAPPER_NAME]) ? $options[self::WRAPPER_NAME] : false;
     }
 
+    /**
+     * @return int|null
+     */
     protected function getSize()
     {
         if ($this->size !== null) {
