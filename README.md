@@ -1,7 +1,7 @@
 AsyncStreams
 ============
 
-A stream wrapper around reactphp for async streams
+A stream wrapper around [reactphp](https://github.com/reactphp/event-loop) for async streams
 
 With inspiration from [guzzle/streams](https://github.com/guzzle/streams)
 
