@@ -1,0 +1,22 @@
+{
+    "name": "krinfreschi/AsyncStreams",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kyle Rinfreschi",
+            "email": "krinfreschi@msn.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "react/event-loop": "0.4.*"
+    },
+    "autoload": {
+        "psr-4":{
+            "krinfreschi\\AsyncStreams\\": "src"
+        },
+        "files": [
+            "src/functions.php"
+        ]
+    }
+}
