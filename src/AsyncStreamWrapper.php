@@ -131,14 +131,14 @@ class AsyncStreamWrapper
 
         if(!is_null($callable) && is_callable($callable)){
             $ret = call_user_func($callable, $asyncHandle);
-            if($ret){
+            if($ret && is_object($ret)){
                 $wrap = $ret;
             }
         }
 
         static::$streams[(int)$handle] = $wrap;
 
-        return $asyncHandle;
+        return $wrap;
     }
 
 
