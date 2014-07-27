@@ -121,14 +121,16 @@ class AsyncStreamWrapper
                 . 'writable, or both.');
         }
 
-        $wrap = fopen(self::WRAPPER_NAME . '://stream', $mode, null, stream_context_create([
+        $asyncHandle = fopen(self::WRAPPER_NAME . '://stream', $mode, null, stream_context_create([
             self::WRAPPER_NAME => [
                 'handle' => $handle,
             ],
         ]));
 
+        $wrap = $asyncHandle;
+
         if(!is_null($callable) && is_callable($callable)){
-            $ret = call_user_func($callable, $wrap);
+            $ret = call_user_func($callable, $asyncHandle);
             if($ret){
                 $wrap = $ret;
             }
@@ -136,7 +138,7 @@ class AsyncStreamWrapper
 
         static::$streams[(int)$handle] = $wrap;
 
-        return $wrap;
+        return $asyncHandle;
     }
 
 
