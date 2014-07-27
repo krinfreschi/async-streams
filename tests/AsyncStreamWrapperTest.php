@@ -78,6 +78,6 @@ class AsyncStreamTest extends \PHPUnit_Framework_TestCase
      * @return resource
      */
     private function wrap($handle){
-        return AsyncStreamWrapper::wrap($handle);
+        return AsyncStreamWrapper::make($handle);
     }
 }

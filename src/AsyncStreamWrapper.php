@@ -94,10 +94,11 @@ class AsyncStreamWrapper
 
     /**
      * @param $handle
-     * @return resource
+     * @param callable $callable
      * @throws \InvalidArgumentException
+     * @return resource
      */
-    public static function wrap($handle)
+    public static function make($handle, $callable = null)
     {
         if (!in_array('async', stream_get_wrappers())) {
             stream_wrapper_register(self::WRAPPER_NAME, __CLASS__);
@@ -125,6 +126,13 @@ class AsyncStreamWrapper
                 'handle' => $handle,
             ],
         ]));
+
+        if(!is_null($callable) && is_callable($callable)){
+            $ret = call_user_func($callable, $wrap);
+            if($ret){
+                $wrap = $ret;
+            }
+        }
 
         static::$streams[(int)$handle] = $wrap;
 
