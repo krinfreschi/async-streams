@@ -12,7 +12,7 @@ This package can be installed easily using Composer. Simply add the following to
 ```json
 {
   "require": {
-    "guzzlehttp/streams": "1.*"
+    "krinfreschi/async-streams": "0.0.*"
   }
 }
 ```
