@@ -19,7 +19,7 @@ This package can be installed easily using Composer. Simply add the following to
 
 Then install your dependencies using composer.phar install.
 
-Global Functions:
+##Global Functions:
 
 ```php
 async_stream_register_read(resource $handle, callable $callable) //$callable will receive args: $handle
@@ -28,7 +28,7 @@ async_stream_register_write(resource $handle, callable $callable) //$callable wi
 async_stream_remove_write(resource $handle)
 ```
 
-Example:
+##Example:
 
 ```php
 use krinfreschi\AsyncStreams\AsyncStreamWrapper;
