@@ -1,9 +1,23 @@
-AsyncStreams
+##AsyncStreams
 ============
 
 A stream wrapper around [reactphp](https://github.com/reactphp/event-loop) for async streams
 
 With inspiration from [guzzle/streams](https://github.com/guzzle/streams)
+
+##Installation
+
+This package can be installed easily using Composer. Simply add the following to the composer.json file at the root of your project:
+
+```json
+{
+  "require": {
+    "guzzlehttp/streams": "1.*"
+  }
+}
+```
+
+Then install your dependencies using composer.phar install.
 
 Global Functions:
 
