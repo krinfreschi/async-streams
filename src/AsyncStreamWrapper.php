@@ -93,6 +93,22 @@ class AsyncStreamWrapper
     }
 
     /**
+     * @param resource|object $handle
+     * @return bool|AsyncStreamWrapper
+     */
+    public static function getFromResource($handle){
+        if(is_resource($handle)){
+            $meta = stream_get_meta_data($handle);
+        }else if(is_object($handle) && method_exists($handle, "getMetadata")){
+            $meta = $handle->getMetadata();
+        }
+        if(!is_array($meta) || !isset($meta["wrapper_data"])){
+            return false;
+        }
+        return $meta["wrapper_data"] instanceof static ? $meta["wrapper_data"] : false;
+    }
+
+    /**
      * @param $handle
      * @param callable $callable
      * @throws \InvalidArgumentException
