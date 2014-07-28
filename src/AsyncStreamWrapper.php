@@ -97,6 +97,7 @@ class AsyncStreamWrapper
      * @return bool|AsyncStreamWrapper
      */
     public static function getFromResource($handle){
+        $meta = false;
         if(is_resource($handle)){
             $meta = stream_get_meta_data($handle);
         }else if(is_object($handle) && method_exists($handle, "getMetadata")){
